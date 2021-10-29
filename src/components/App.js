@@ -14,6 +14,7 @@ const App = () => {
   const [modalChildren, setModalChildren] = useState(null);
   const [joinedRooms, setJoinedRooms] = useState([]);
   const [user, setUser] = useState({ email: null, nickname: null });
+  
   useEffect(() => {
     // 로그인 정보 가져오기 (sessionStorage)
     const userInfo = sessionStorage.getItem("user");
@@ -55,16 +56,18 @@ const App = () => {
       socket.on("joined_rooms", ({ roomList }) => {
         console.log("joined_rooms ", roomList.map(item => JSON.parse(item)));
         setJoinedRooms(roomList.map(item => JSON.parse(item)));
-      })
+      });
     }
   }, [user])
   
+  // 로그인
   const handleSignIn = ({ email, nickname }) => {
     socket.emit("signin:user", ({ email, nickname }));
     sessionStorage.setItem("user", JSON.stringify({ email, nickname }));
     setUser({ email, nickname });
   }
-  const handleInviteChat = ({ selectedMembers }) => {
+  // 대화 초대
+  const handleInviteChat = ({ selectedMembers, cb }) => {
     console.log(selectedMembers)
     const roomId = getHashStr(16);
     const roomNames = [user.nickname];
@@ -76,17 +79,29 @@ const App = () => {
     }
     const roomName = roomNames.sort().toString();
     socket.emit("invite:chat", { roomId, roomName, email: user.email, emailList });
+    handleCloseModal();
+    cb(`/chat/${roomId}?roomName=${roomName}`);
   }
+  // 로그아웃
+  const handleSignOut = () => {
+    console.log('handleSignOut')
+    socket.emit('signout:user');
+    sessionStorage.removeItem('user');
+    setUser({ email: null, nickname: null })
+  }
+
+  // 채팅목록 -> 오픈채팅(대화상대 목록) 모달
   const handleOpenModal = (_modalChildren) => {
     console.log('handleOpenModal')
     setModalChildren(_modalChildren);
     setIsOpenModal(true);
   }
   const handleCloseModal = () => {
+    console.log('handleCloseModal')
     setIsOpenModal(false);
   }
   return (
-    <AppContext.Provider value={{ user, handleSignIn, signedMembers, handleOpenModal, handleCloseModal, handleInviteChat, joinedRooms }}>
+    <AppContext.Provider value={{ user, handleSignIn, handleSignOut, signedMembers, handleOpenModal, handleCloseModal, handleInviteChat, joinedRooms }}>
       <Routes />
       {isOpenModal && <Modal handleCloseModal={handleCloseModal}>{modalChildren}</Modal>}
       <GlobalStyle />

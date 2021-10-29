@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import { array, bool, func, object, oneOfType, string } from "prop-types";
 
 import { ContentWrapper, DefaultLayout, FooterItem, FooterNav, FooterWrapper } from './template.styles'
 import HeaderComponent from './HeaderComponent';
+import { AppContext } from 'components/App';
 
 const Layout = props => {
   const { bgColor, children, arrowLeft, headerTitle, headerSubTitle, magnification, plus, handleArrowLeft, handleMagnification, handlePlus, contentHeight = "500px", footer } = props;
+  const { handleSignOut } = useContext(AppContext);
   const history = useHistory();
+
   const handleNav = pathname => {
     history.push(pathname);
+  }
+  const _handleSignOut = () => {
+    handleSignOut();
+    handleNav("/");
   }
   return (
     <DefaultLayout bgColor={bgColor}>
@@ -30,7 +37,7 @@ const Layout = props => {
         <FooterNav>
           <FooterItem onClick={() => handleNav("/members")}></FooterItem>
           <FooterItem onClick={() => handleNav("/chat-list")}></FooterItem>
-          <FooterItem onClick={() => handleNav("/")}></FooterItem>
+          <FooterItem onClick={_handleSignOut}></FooterItem>
         </FooterNav>
       </FooterWrapper>}
     </DefaultLayout>

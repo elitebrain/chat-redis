@@ -25,6 +25,10 @@ const Chat = props => {
         }
       })
     });
+    // 채팅방 입장 후 message 받기 전 이탈 시 memory leak 방지를 위한 cleanup
+    return (() => {
+      socket.off("receiveMsg");
+    })
   }, []);
 
   useEffect(() => {

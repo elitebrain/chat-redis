@@ -14,13 +14,18 @@ const ChatListLi = styled.li`
 
   & > h2 {
     display: inline-block;
+    vertical-align: text-bottom;
     margin-right: 6px;
     font-size: 16px;
     color: var(--gray-800);
     font-weight: 600;
+    max-width: calc(100% - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   & > h3 {
     display: inline-block;
+    vertical-align: text-bottom;
     font-size: 12px;
     color: var(--gray-600);
   }
@@ -34,14 +39,6 @@ const ChatWrapper = styled.ul`
   overflow-y: auto;
   padding: 48px 0 0 24px;
   background-color: var(--primary-alpha-50);
-  &::-webkit-scrollbar {
-    width: 10px;
-    height: 8px;
-    background-color: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var(--gray-600-alpha-50);
-  }
 `;
 const ChatLoading = styled.li`
   position: absolute;

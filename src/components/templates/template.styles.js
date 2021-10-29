@@ -4,6 +4,7 @@ const ContentWrapper = styled.div`
   height: ${props => props.contentHeight};
   width: 100%;
   overflow-y: auto;
+  box-shadow: 0px 1px 1px 1px var(--gray-800-alpha-50);
 `;
 
 const DefaultLayout = styled.div`
@@ -39,6 +40,7 @@ const FooterWrapper = styled.div`
 const HeaderWrapper = styled.div`
   height: ${props => props.height || "60px"};
   text-align: right;
+  box-shadow: 0px 1px 1px 1px var(--gray-800-alpha-50);
 `;
 
 const IconWrapper = styled.div`
@@ -46,6 +48,9 @@ const IconWrapper = styled.div`
   margin: ${props => props.margin || "18px"};
   height: 24px;
   float: ${props => props.float || 'initial'};
+
+  width: ${props => props.width || "auto"};
+  text-align: left;
   
   &:hover {
     cursor: pointer;
@@ -53,13 +58,18 @@ const IconWrapper = styled.div`
 
   & > h2 {
     display: inline-block;
+    vertical-align: text-bottom;
     margin-right: 6px;
     font-size: 16px;
     color: var(--gray-800);
     font-weight: 600;
+    max-width: calc(100% - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   & > h3 {
     display: inline-block;
+    vertical-align: text-bottom;
     font-size: 12px;
     color: var(--gray-600);
   }

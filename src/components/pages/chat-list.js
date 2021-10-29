@@ -9,11 +9,12 @@ import MembersModalComponent from 'components/Members/MembersModalComponent';
 const ChatList = () => {
   const { signedMembers, handleOpenModal, joinedRooms } = useContext(AppContext);
   const history = useHistory();
-  const modalChildren = <MembersModalComponent members={signedMembers} />
+  const modalChildren = <MembersModalComponent members={signedMembers} history={history} />
   const handleClick = (item) => {
     const { roomId, roomName } = item;
     history.push(`/chat/${roomId}?roomName=${roomName}`);
-  }
+  };
+  console.log(joinedRooms)
   return (
     <Layout arrowLeft magnification plus handlePlus={() => handleOpenModal(modalChildren)} footer>
       <ChatRoomComponent chatRoomList={joinedRooms} handleClick={handleClick} />

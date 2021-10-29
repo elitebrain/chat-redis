@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext } from 'react';
+import { array, object } from "prop-types";
 
 import { ReactComponent as CheckSvg } from "assets/icons/check.svg";
 import { ButtonWrapper, MembersLi, MembersUl } from './members.styles'
@@ -6,9 +7,9 @@ import { AtomicButton } from 'components/atomics';
 import { AppContext } from 'components/App';
 
 const MembersModalComponent = props => {
-  const { members } = props;
+  const { members, history } = props;
   const [checkedMembers, setCheckedMembers] = useState([]);
-  const { handleInviteChat, user } = useContext(AppContext);
+  const { handleInviteChat, handleCloseModal, user } = useContext(AppContext);
 
   const handleMember = item => {
     const { email, nickname } = item;
@@ -20,10 +21,13 @@ const MembersModalComponent = props => {
       }
     });
   }
-
+  console.log(history, typeof history)
+  const inviteChatCallback = pathname => {
+    history.push(pathname);
+  }
   const handleOk = () => {
     console.log(checkedMembers)
-    handleInviteChat({ selectedMembers: checkedMembers });
+    handleInviteChat({ selectedMembers: checkedMembers, cb: inviteChatCallback });
   }
   return (
     <>
@@ -37,10 +41,15 @@ const MembersModalComponent = props => {
       </MembersUl>
       <ButtonWrapper>
         <AtomicButton className="mr_6px" handleClick={handleOk}>확인</AtomicButton>
-        <AtomicButton>취소</AtomicButton>
+        <AtomicButton handleClick={handleCloseModal}>취소</AtomicButton>
       </ButtonWrapper>
     </>
   )
+}
+
+MembersModalComponent.propTypes = {
+  members: array,
+  history: object
 }
 
 export default MembersModalComponent

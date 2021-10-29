@@ -15,10 +15,13 @@ const HeaderComponent = props => {
       {arrowLeft && <IconWrapper float="left" onClick={() => history.go(-1)}>
         <ArrowLeftSvg />
       </IconWrapper>}
-      {headerTitle && <IconWrapper float="left" onClick={handleArrowLeft}>
+      {headerTitle && <IconWrapper float="left" onClick={handleArrowLeft} width="calc(100% - 156px)">
         <h2>{headerTitle}</h2>
         <h3>{headerSubTitle}</h3>
       </IconWrapper>}
+      {/* {headerTitle && <IconWrapper margin="18px 0px" float="left" onClick={handleArrowLeft}>
+        <h3>{headerSubTitle}</h3>
+      </IconWrapper>} */}
       {magnification && <IconWrapper onClick={handleMagnification}>
         <MagnificationSvg />
       </IconWrapper>}

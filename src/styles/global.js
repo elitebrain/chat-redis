@@ -44,6 +44,15 @@ export default createGlobalStyle`
     --gray-900-alpha-80: #212529CC;
   }
   
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 8px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary-alpha-50);
+  }
+
   input {
     border: none;
     background-color: transparent;
