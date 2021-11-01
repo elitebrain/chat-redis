@@ -1,7 +1,7 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useRef, useEffect, Fragment } from 'react';
 import { array, bool, func } from "prop-types";
 
-import { ChatWrapper, ChatItem, ChatMsg, ChatTime, InputWrapper, ChatNickname, ChatLoading } from './chat.styles'
+import { ChatWrapper, ChatItem, ChatMsg, ChatTime, InputWrapper, ChatNickname, ChatLoading, ChatDividerTime } from './chat.styles'
 import { AppContext } from 'components/App';
 import { dateForm } from 'utils/functions';
 import { AtomicButton, AtomicInput } from 'components/atomics';
@@ -58,12 +58,23 @@ const ChatComponent = props => {
       <ChatWrapper ref={ulRef}>
         {loading && <ChatLoading />}
         {chatList.map((item, i) => (
-          <ChatItem key={i} className={user.email === item.email ? "send_msg" : "receive_msg"}>
-            {user.nickname !== item.nickname && (i === 0 || chatList[i-1].nickname !== item.nickname || !chatList[i-1].hash) && <ChatNickname>{item.nickname}</ChatNickname>}
-            {exposureTime(i, user.email === item.email) && <ChatTime className="send_msg">{dateForm(item.send_time).format('HH:mm')}</ChatTime>}
-            <ChatMsg className="msg">{item.msg}</ChatMsg>
-            {exposureTime(i, user.email !== item.email) && <ChatTime className="receive_msg">{dateForm(item.send_time).format('HH:mm')}</ChatTime>}
-          </ChatItem>
+          <Fragment key={i}>
+            {(i === 0 || dateForm(item.send_time).format("YYYY-MM-DD") !== dateForm(chatList[i-1].send_time).format("YYYY-MM-DD")) &&
+              <ChatItem>
+                <ChatDividerTime>
+                  <span className="divider" />
+                  <span className="time">{dateForm(item.send_time).format("KOR_YYMDD")}</span>
+                  <span className="divider" />
+                </ChatDividerTime>
+              </ChatItem>
+            }
+            <ChatItem className={user.email === item.email ? "send_msg" : "receive_msg"}>
+              {user.nickname !== item.nickname && (i === 0 || chatList[i-1].nickname !== item.nickname || !chatList[i-1].hash) && <ChatNickname>{item.nickname}</ChatNickname>}
+              {exposureTime(i, user.email === item.email) && <ChatTime className="send_msg">{dateForm(item.send_time).format('HH:mm')}</ChatTime>}
+              <ChatMsg className="msg">{item.msg}</ChatMsg>
+              {exposureTime(i, user.email !== item.email) && <ChatTime className="receive_msg">{dateForm(item.send_time).format('HH:mm')}</ChatTime>}
+            </ChatItem>
+          </Fragment>
         ))}
       </ChatWrapper>
       <InputWrapper>

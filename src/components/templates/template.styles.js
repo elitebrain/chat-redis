@@ -16,7 +16,9 @@ const DefaultLayout = styled.div`
 `;
 
 const FooterItem = styled.span`
+  position: relative;
   display: inline-block;
+  vertical-align: middle;
   width: calc(100% / 3);
   height: 80px;
   background-color: var(--gray-200);
@@ -27,6 +29,18 @@ const FooterItem = styled.span`
   &:hover {
     cursor: pointer;
     background-color: var(--gray-300);
+  }
+  &.active > svg {
+    color: var(--gray-900);
+  }
+  & > svg {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    color: var(--gray-600);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 `;
 const FooterNav = styled.nav`

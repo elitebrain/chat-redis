@@ -16,14 +16,19 @@ const Chat = props => {
 
   useEffect(() => {
     socket.on("receiveMsg", (msgObj) => {
-      const { hash, email, nickname, msg, send_time } = msgObj;
+      const { hash, email, nickname, msg, send_time, from, roomId } = msgObj;
+      console.log(msgObj)
       setChatList(prevState => {
         if (roomId === msgObj.roomId && prevState.findIndex(v => v.hash === hash) === -1) {
           return [...prevState, { hash, email, nickname, msg, send_time }].sort((a, b) => new Date(a.send_time) - new Date(b.send_time));
         } else {
           return prevState;
         }
-      })
+      });
+    });
+    socket.on("receivePrevMsgs", ({ prevMsgs }) => {
+      setChatList([...prevMsgs.sort((a,b) => new Date(a.send_time) - new Date(b.send_time))])
+      setLoading(false);
     });
     // 채팅방 입장 후 message 받기 전 이탈 시 memory leak 방지를 위한 cleanup
     return (() => {
@@ -32,11 +37,16 @@ const Chat = props => {
   }, []);
 
   useEffect(() => {
+    console.log(Date.now())
+  }, [loading]);
+
+  useEffect(() => {
     console.log(roomId)
     if (roomId) {
       setLoading(true);
-      setTimeout(() => socket.emit('getMsg', { roomId }), 1000);
-      setTimeout(() => setLoading(false), 1000);
+      socket.emit('getMsg', { roomId });
+      // setTimeout(() => socket.emit('getMsg', { roomId }), 1000);
+      // setTimeout(() => setLoading(false), 1000);
     }
   }, [roomId]);
 

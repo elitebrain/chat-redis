@@ -26,22 +26,19 @@ const App = () => {
     
     // socket 접속 정보
     socket.on('connected', obj => {
-      console.log("connected obj", obj)
+      // console.log("connected obj", obj)
     });
 
     // 회원 목록 받기
     socket.on("signed_members", list => {
       setSignedMembers(list.map(item => JSON.parse(item)));
     });
-    // 회원 목록 요청
-    socket.emit("signup_members");
   }, []);
 
   useEffect(() => {
     if (user?.email) {
       // 채팅 초대 받기
       socket.on("invited:chat", ({ roomId, roomName, emailList }) => {
-        console.log("invited:chat", roomId, joinedRooms, roomName, emailList, user.email);
         socket.emit("join:room", { roomId, roomName, email: user.email, emailList });
       });
   
@@ -54,11 +51,36 @@ const App = () => {
       socket.emit("joined:rooms", ({ email: user.email }));
       // 참여한 채팅 방 목록 받기
       socket.on("joined_rooms", ({ roomList }) => {
-        console.log("joined_rooms ", roomList.map(item => JSON.parse(item)));
-        setJoinedRooms(roomList.map(item => JSON.parse(item)));
+        setJoinedRooms(prevState => {
+          for (let i = 0; i < roomList.length; i++) {
+            console.log(prevState.findIndex(v => v.roomId === roomList[i].roomId), roomList[i])
+            if (prevState.findIndex(v => v.roomId === roomList[i].roomId) === -1) {
+              return [...prevState, ...roomList]
+            } else {
+              return prevState
+            }
+          }
+        });
+      });
+
+      socket.on("receiveMsg", msgObj => {
+        const { from, roomId, send_time, msg } = msgObj;
+        console.log(from, roomId, send_time)
+        if (!from) {
+          sortJoinedRooms(roomId, send_time, msg);
+        }
+      })
+
+      socket.on("reload", () => {
+        console.log('reloadddd')
+        window.location.reload();
       });
     }
-  }, [user])
+  }, [user]);
+
+  const sortJoinedRooms = (roomId, latest_msg_send_time, latest_msg) => {
+    setJoinedRooms(prevState => [...prevState.filter(v => v.roomId === roomId).map(item => ({ ...item, latest_msg_send_time, latest_msg })), ...prevState.filter(v => v.roomId !== roomId)]);
+  };
   
   // 로그인
   const handleSignIn = ({ email, nickname }) => {

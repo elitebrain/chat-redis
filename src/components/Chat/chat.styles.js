@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
 const ChatListLi = styled.li`
+  position: relative;
   height: 60px;
   padding: 6px 12px;
   border-bottom: 1px solid var(--gray-300);
+  color: var(--gray-800);
   &:first-child {
     border-top: 1px solid var(--gray-300);
   }
@@ -28,6 +30,23 @@ const ChatListLi = styled.li`
     vertical-align: text-bottom;
     font-size: 12px;
     color: var(--gray-600);
+  }
+  & > p {
+    color: var(--gray-600);
+  }
+  & > p.latest_send_time {
+    position: absolute;
+    right: 12px;
+    top: 6px;
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+  & > p.preview_msg {
+    font-size: 12px;
+    max-width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 `;
 const ChatListUl = styled.ul`
@@ -98,10 +117,40 @@ const ChatMsg = styled.span`
   word-break: break-all;
   white-space: pre-line;
 `;
-const ChatNickname = styled.h3`
+const ChatNickname = styled.h2`
   color: var(--gray-700);
   font-size: 14px;
+  font-weight: 700;
   margin-bottom: 6px;
+`;
+const ChatDividerTime = styled.div`
+  position: relative;
+  height: 16px;
+  & > span {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  & > span.divider {
+    height: 100%;
+    width: calc(50% - 79px);
+    &::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 0;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-top: 1px solid var(--gray-600);
+    }
+  }
+  & > span.time {
+    width: 150px;
+    font-size: 12px;
+    text-align: center;
+    color: var(--gray-600);
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -118,5 +167,6 @@ export {
   ChatTime,
   ChatMsg,
   ChatNickname,
+  ChatDividerTime,
   InputWrapper
 }

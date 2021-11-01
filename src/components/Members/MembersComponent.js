@@ -12,7 +12,6 @@ const MembersComponent = props => {
   const [clientPosition, setClientPosition] = useState({x: 0, y:0});
   const { handleInviteChat, user } = useContext(AppContext);
   const history = useHistory();
-  console.log(history)
 
   const handleMember = (e, item) => {
     const { clientX, clientY } = e;
